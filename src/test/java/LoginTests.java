@@ -4,6 +4,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -25,5 +26,20 @@ public class LoginTests {
         driver.findElement(By.id("ctl00_MainContent_username")).sendKeys("Tester");
         driver.findElement(By.id("ctl00_MainContent_password")).sendKeys("test" + Keys.ENTER);
         Assert.assertEquals(driver.getTitle(), "Web Orders");
+    }
+    @Test
+    public void negativeLogin() {
+        driver.get("http://secure.smartbearsoftware.com/samples/testcomplete12/WebOrders/login.aspx");
+        Assert.assertTrue(driver.getTitle().equals("Web Orders Login"));
+        String currentUrl = driver.getCurrentUrl();
+        driver.findElement(By.id("ctl00_MainContent_username")).sendKeys("Test");
+        driver.findElement(By.id("ctl00_MainContent_password")).sendKeys("Test" + Keys.ENTER);
+        Assert.assertTrue(driver.getTitle().equals("Web Orders Login"));
+        Assert.assertTrue(driver.getCurrentUrl().equals(currentUrl));
+    }
+
+    @AfterMethod
+    public void cleanUp(){
+        driver.close();
     }
 }
